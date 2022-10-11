@@ -5,8 +5,12 @@
 
 namespace rubikscube {
 
+// TODO(me)
 
-// TODO(me) ...
+/**
+ * Returns a string with all Values of the given Face of the Cube.
+ * */
+std::string printFace(std::array<std::array<int, 3>, 3> face);
 
 }  // namespace rubikscube
 
