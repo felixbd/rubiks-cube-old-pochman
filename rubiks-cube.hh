@@ -8,6 +8,6 @@ namespace rubikscube {
 
 // TODO(me) ...
 
-}
+}  // namespace rubikscube
 
 #endif  // RUBIKS_CUBE_HH_

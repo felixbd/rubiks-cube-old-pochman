@@ -2,6 +2,7 @@
 
 #include <array>
 #include <map>
+#include <vector>
 #include <iostream>
 #include <string>
 #include "./rubiks-cube.hh"
@@ -10,9 +11,11 @@
 
 // see rubiks-cube.hh /////////////////////////////////////////////////////////
 std::string printFace(std::array<std::array<int, 3>, 3> face) {
-    std::string rvString = "";
+    std::string rvString;
     for (int x = 0; x < 3; x++) {
         for (int y = 0; y < 3; y++) {
+            // TODO(me)
+            //  std::to_string('0' + face[x][y]) dose not work
             rvString += '0' + face[x][y];
         }
         rvString += '\n';
@@ -77,14 +80,14 @@ std::map<std::string, int> MANIPULATION_TO_INT = {
 
 class Cube {
  protected:
-        std::array<std::array<std::array<int, 3>, 3>, 6> board;
+        std::array<std::array<std::array<int, 3>, 3>, 6> board{};
 
  public:
         Cube() {
             board = SOLVED_BOARD;
         }
 
-        ~Cube() {}
+        ~Cube() = default;
 
         // see rubiks-cube.hh /////////////////////////////////////////////////
         int* getBoard(void) {
@@ -104,35 +107,29 @@ class Cube {
          */
 
         // see rubiks-cube.hh /////////////////////////////////////////////////
-        friend std::ostream& operator<<(std::ostream& ostr, Cube& c) {
-            return ostr << printFace(c.board[0])
-                        << printFace(c.board[1])
-                        << printFace(c.board[2])
-                        << printFace(c.board[3])
-                        << printFace(c.board[4])
-                        << printFace(c.board[5])
-                        << std::endl;
+        friend std::ostream& operator<<(std::ostream& pOstream, Cube& c) {
+            return pOstream << printFace(c.board[0])
+                                << printFace(c.board[1])
+                                << printFace(c.board[2])
+                                << printFace(c.board[3])
+                                << printFace(c.board[4])
+                                << printFace(c.board[5])
+                                << std::endl;
         }
 
         // see rubiks-cube.hh /////////////////////////////////////////////////
-        void manipulation(std::string instrucLst[]) {
-            std::cout << "lenght of given list: "
-                      << (sizeof(&instrucLst) / sizeof(std::string))
-                      << std::endl;  // see Fixme below
-
+        // FIXME(me)
+        void manipulation(std::vector<std::string> const& instructions) {
             // the number of times each manipulation should be performed
-            int num = 1;
+            int num;
 
             // loop over every instruction
-            for (int i = 0;
-                 i < (sizeof(&instrucLst) / sizeof(std::string));  // FIXME(all)
-                 i++) {
-                num = (sizeof(&instrucLst[i]) / sizeof(char) == 1)
-                          ? 1 : (&instrucLst[i][1] == (std::string)"2") ? 2 : 3;
-
-                // performe manipulation (n times)
+            for (const std::string& instruction : instructions) {
+                num = (instruction[1] == std::string::npos) ? 1 :
+                        (instruction[1] == '2') ? 2 : 3;
+                // perform manipulation (n times)
                 for (int n = 0; n < num; n++) {
-                    switch (MANIPULATION_TO_INT[&instrucLst[i][0]]) {
+                    switch (MANIPULATION_TO_INT[&instruction[0]]) {
                         case 0: front(); break;
                         case 1: back();  break;
                         case 2: up();    break;
@@ -143,20 +140,19 @@ class Cube {
                     }
                 }
             }
-            return;
         }
 
         // see rubiks-cube.hh /////////////////////////////////////////////////
         void front(void) {
             std::cout << "F" << std::endl;
-
             // TODO(me) should i use vectors or arrays?
-
+            /*
             // get the current relevant values
             // std::array<int, 3> whiteRow = board[0][2];
             // std::array<int, 3> orangeRow = [i[0] for i in board[3]];
             // std::array<int, 3> yellowRow = board[5][0];
             // std::array<int, 3> redRow[3] = [i[2] for i in board[1]];
+             */
 
             /*
              * update values
@@ -209,14 +205,15 @@ int main(void) {
 
     // printing out the current element at a given point
     std::cout
-        << "the element at (4,2,1) is:" << abc.getBoardElement(4, 2, 1)
+        << "the element at (4,2,1) is:"
+        << abc.getBoardElement(4, 2, 1)
         << std::endl;
 
     // printing all elements
     std::cout << "printing the board:\n\n" << abc << std::endl;
 
     // performing manipulations
-    std::string testMan[] = {"U", "B2", "D'"};
+    std::vector<std::string> testMan = {"U", "B2", "D'"};
     abc.manipulation(testMan);
 
     // printing all elements
