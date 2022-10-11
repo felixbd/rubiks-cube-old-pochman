@@ -5,6 +5,7 @@
 #include <gtest/gtest.h>
 #include "./rubiks-cube.hh"
 
+// TODO(me) tests schreiben ...
 
 TEST() {
     ASSERT_EQ(true == 1) << "True == 1";
