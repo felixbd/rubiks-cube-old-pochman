@@ -73,9 +73,9 @@ const std::array<std::array<std::array<int, 3>, 3>, 6> SOLVED_BOARD = {
     }
 };
 
-std::map<std::string, int> MANIPULATION_TO_INT = {
-    {"F", 0}, {"B", 1}, {"U", 2},
-    {"D", 3}, {"L", 4}, {"R", 5}
+std::map<char, int> MANIPULATION_TO_INT = {
+    {'F', 0}, {'B', 1}, {'U', 2},
+    {'D', 3}, {'L', 4}, {'R', 5}
 };
 
 class Cube {
@@ -118,18 +118,17 @@ class Cube {
         }
 
         // see rubiks-cube.hh /////////////////////////////////////////////////
-        // FIXME(me)
         void manipulation(std::vector<std::string> const& instructions) {
             // the number of times each manipulation should be performed
             int num;
 
             // loop over every instruction
             for (const std::string& instruction : instructions) {
-                num = (instruction[1] == std::string::npos) ? 1 :
+                num = (instruction.length() == 1) ? 1 :
                         (instruction[1] == '2') ? 2 : 3;
                 // perform manipulation (n times)
                 for (int n = 0; n < num; n++) {
-                    switch (MANIPULATION_TO_INT[&instruction[0]]) {
+                    switch (MANIPULATION_TO_INT[instruction[0]]) {
                         case 0: front(); break;
                         case 1: back();  break;
                         case 2: up();    break;
@@ -141,6 +140,8 @@ class Cube {
                 }
             }
         }
+
+        // TODO(me) Implemented funcs ...
 
         // see rubiks-cube.hh /////////////////////////////////////////////////
         void front(void) {
@@ -205,19 +206,20 @@ int main(void) {
 
     // printing out the current element at a given point
     std::cout
-        << "the element at (4,2,1) is:"
+        << "the element at (4,2,1) is: "
         << abc.getBoardElement(4, 2, 1)
         << std::endl;
 
     // printing all elements
-    std::cout << "printing the board:\n\n" << abc << std::endl;
+    std::cout << "\nprinting the board:\n\n" << abc << std::endl;
 
     // performing manipulations
+    std::cout << "performing manipulations: U B2 B'\n" << std::endl;
     std::vector<std::string> testMan = {"U", "B2", "D'"};
     abc.manipulation(testMan);
 
     // printing all elements
-    std::cout << "printing the board:\n\n" << abc << std::endl;
+    std::cout << "\nprinting the board:\n\n" << abc << std::endl;
 
     return 0;
 }

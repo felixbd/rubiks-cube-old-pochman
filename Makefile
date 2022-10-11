@@ -16,6 +16,9 @@ test: compile
 checkstyle:
 	python3 cpplint.py  --repository=. *.cc *.hh
 
+run:
+	./rubiks-cube.o
+
 clean:
 	rm -f *.o
 
