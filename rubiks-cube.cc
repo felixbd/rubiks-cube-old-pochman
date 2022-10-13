@@ -58,6 +58,20 @@ std::ostream& operator<<(std::ostream& pOstream, Cube& c) {
                         << std::endl;
 }
 
+bool operator==(Cube &a, Cube &b) {
+    for (int x = 0; x < 5; ++x) {
+        for (int y = 0; y < 4; ++y) {
+            for (int z = 0; z < 4; ++z) {
+                if (a.getBoardElement(x, y, z) !=
+                    b.getBoardElement(x, y, z)) {
+                    return false;
+                }
+            }
+        }
+    }
+    return true;
+}
+
 void Cube::manipulation(std::vector<std::string> const& instructions) {
     // the number of times each manipulation should be performed
     int num;

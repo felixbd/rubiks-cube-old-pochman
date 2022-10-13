@@ -155,6 +155,11 @@ class Cube {
  * */
 std::ostream& operator<<(std::ostream& pOstream, Cube& c);
 
+/**
+ * Check if tow Cube objects are representing the same Cube.
+ * @return true if cubes are eq else false
+ * */
+bool operator==(Cube& a, Cube& b);
 
 }  // namespace rubikscube
 

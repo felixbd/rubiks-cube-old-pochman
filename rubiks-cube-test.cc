@@ -9,24 +9,46 @@
 /**
  * Test if the constructor of the Cube class works.
  */
-TEST(MainCubeTest, checkInit) {
-    rubikscube::Cube c1 = rubikscube::Cube();
+TEST(MainCubeTest, checkCubeConstructor) {
+    ASSERT_NO_THROW(rubikscube::Cube c1 = rubikscube::Cube();)
+                    << "construction of object from class Cube";
 }
 
-TEST(MainCubeTest, checkManipulationReaction) {
-    ASSERT_EQ(true, 1) << "true should eq to 1";
+TEST(MainCubeTest, checkEq) {
+    // create cube obj
+    rubikscube::Cube c4 = rubikscube::Cube();
+    rubikscube::Cube c5 = rubikscube::Cube();
 
+    EXPECT_TRUE(c4 == c5) << "solved qubes should be equal";
+
+    // manipulate Cube c4
+    std::vector<std::string> instruction = {"R"};
+    c4.manipulation(instruction);
+
+    // EXPECT_FALSE(c4 == c5) << "not eq cubes should not be eq";
+}
+
+TEST(MainCubeTest, checkCubeManipulation) {
+    // create cube obj
     rubikscube::Cube c2 = rubikscube::Cube();
+    rubikscube::Cube c3 = rubikscube::Cube();
 
-    // TODO(me) manipulate the cube c2 (J Perm)
-    /*
-    std::vector<std::string> instructions = {
-            "R'", "U", "L'", "U2", "R", "U'", "R'", "U2", "RL"
-    };
-    c2.manipulation(instructions);
-    */
+    // manipulate the cube c2 with a Sexy Move
+    std::vector<std::string> sexyMove = {"R", "U", "R'", "U'"};
+    c2.manipulation(sexyMove);
 
-    // TODO(me) check if the cube is correctly manipulated
+    // TODO(me) check if manipulation was done correctly
+
+    // manipulate the cube c2 with a reverse Sexy Move
+    std::vector<std::string> reverseSexyMove = {"U", "R", "U'", "R'"};
+    c2.manipulation(reverseSexyMove);
+
+    // check if manipulation was done correctly (cube should eq a solved qube)
+    EXPECT_TRUE(c2 == c3) << "c2 should eq a solved Cube (c3)";
+
+    // TODO(me) test some more permutations ...
+    // T Perm: RUR'UR'FR2U'R'U'RUR'F'
+    // J Perm: R'UL'U2RU'R'U2RL
 }
 
 int main(int argc, char **argv) {
