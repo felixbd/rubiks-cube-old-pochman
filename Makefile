@@ -4,22 +4,34 @@
 # @file
 # @version 0.1
 
-all: compile test checkstyle
+CC=g++
+INCDIRS=-I.
+OPT=3
+CFLAGS=-Wall -Wextra -g $(INCDIRS) -O$(OPT)
 
-compile:
-	# g++ rubiks-cube-test.cc -o rubiks-cube-test.o -lgtest -lpthread
-	g++ rubiks-cube.cc -o rubiks-cube.o
+OBJECTS=rubiks-cube.o main.o
+TEST-OBJECTS=rubiks-cube-test.o rubiks-cube.o
+MAIN=main
 
-test: compile
-	# ./rubiks-cube-test.o
+all: $(MAIN) test checkstyle
+
+$(MAIN): $(OBJECTS)
+	$(CC) $^ -o $@
+
+%.o: %.cc
+	$(CC) -c $^ -o $@ $(CFLAGS)
+
+test: $(TEST-OBJECTS)
+	$(CC) $^ -l gtest -l pthread -o test.o
+	./test.o
 
 checkstyle:
 	python3 cpplint.py  --repository=. *.cc *.hh
 
 run:
-	./rubiks-cube.o
+	./$(MAIN)
 
 clean:
-	rm -f *.o
+	rm -f *.o $(MAIN)
 
 # end
