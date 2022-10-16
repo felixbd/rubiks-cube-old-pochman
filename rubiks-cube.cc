@@ -13,7 +13,7 @@
 
 namespace rubikscube {
 
-std::string printFace(std::array<std::array<int, 3>, 3> face) {
+std::string printFace(FACE face) {
     std::string rvString;
     for (int x = 0; x < 3; x++) {
         for (int y = 0; y < 3; y++) {
@@ -26,7 +26,26 @@ std::string printFace(std::array<std::array<int, 3>, 3> face) {
     return rvString + "\n";
 }
 
-Cube::Cube() {
+// TODO(me) add test case and check if this func is correct
+FACE rotateMatrix(FACE a, int num) {
+    for (int index = 0; index < num; ++index) {
+        // Transposing the matrix
+        for (int i = 0; i < 3; ++i) {
+            for (int j = i + 1; j < 3; ++j) {
+                std::swap(a[i][j], a[j][i]);
+            }
+        }
+        // Reversing each row of the matrix
+        for (int i = 0; i < 3; ++i) {
+            for (int j = 0; j < 3 / 2; ++j) {
+                std::swap(a[i][j], a[i][3-j-1]);
+            }
+        }
+    }
+    return a;
+}
+
+    Cube::Cube() {
     board = SOLVED_BOARD;
 }
 
@@ -36,7 +55,7 @@ Cube::~Cube() = default;
 //     return board;
 // }
 
-std::array<std::array<int, 3>, 3> Cube::getFace(int a) {
+FACE Cube::getFace(int a) {
     if (a < 0 || a > 5) {
         throw std::invalid_argument("INDEX OF getFace out of bound");
     }
@@ -48,7 +67,6 @@ int Cube::getBoardElement(int x, int y, int z) {
 }
 
 std::ostream& operator<<(std::ostream& pOstream, Cube& c) {
-    // return pOstream << printFace(c.board[0])
     return pOstream << printFace(c.getFace(0))
                         << printFace(c.getFace(1))
                         << printFace(c.getFace(2))
@@ -58,7 +76,7 @@ std::ostream& operator<<(std::ostream& pOstream, Cube& c) {
                         << std::endl;
 }
 
-bool operator==(Cube &a, Cube &b) {
+bool operator==(Cube a, Cube b) {
     for (int x = 0; x < 5; ++x) {
         for (int y = 0; y < 4; ++y) {
             for (int z = 0; z < 4; ++z) {
@@ -89,61 +107,52 @@ void Cube::manipulation(std::vector<std::string> const& instructions) {
                 case 3: down();  break;
                 case 4: left();  break;
                 case 5: right(); break;
-                default: std::cout << "INVALID OP" << std::endl; break;
+                default: std::cerr << "INVALID OP" << std::endl; break;
             }
         }
     }
 }
 
-// TODO(me) Implemented funcs ...
-
 void Cube::front() {
-    std::cout << "F" << std::endl;
-    // TODO(me) should i use vectors or arrays?
-    /*
     // get the current relevant values
-    // std::array<int, 3> whiteRow = board[0][2];
-    // std::array<int, 3> orangeRow = [i[0] for i in board[3]];
-    // std::array<int, 3> yellowRow = board[5][0];
-    // std::array<int, 3> redRow[3] = [i[2] for i in board[1]];
-     */
+    std::array<int, 3> whiteRow = board[0][2];
+    std::array<int, 3> orangeRow = {
+            board[3][0][0], board[3][1][0], board[3][2][0]
+    };
+    std::array<int, 3> yellowRow = board[5][0];
+    std::array<int, 3> redRow = {
+            board[1][0][2], board[1][1][2], board[1][2][2]
+    };
 
-    /*
-     * update values
-     * update the cube by rotating the blue face clockwise by 90°
-     *
-     * self._board[0][2] = red_row[::-1]
-     *
-     * for index in range(len(white_row)):
-     *     self._board[3][index][0] = white_row[index]
-     *
-     * self._board[5][0] = orange_row[::-1]
-     *
-     * for index in range(len(yellow_row)):
-     *     self._board[1][index][2] = yellow_row[index]
-     *
-     * self._board[2] = np.rot90(np.array(self._board[2]), 3).tolist()
-     */
+    // update the cube by rotating the blue face clockwise by 90°
+    board[0][2] = {redRow[2], redRow[1], redRow[0]};
+    for (int i = 0; i < 3; ++i) { board[3][i][0] = whiteRow[i]; }
+    board[5][0] = {orangeRow[2], orangeRow[1], orangeRow[0]};
+    for (int i = 0; i < 3; ++i) { board[1][i][2] = yellowRow[i]; }
+    board[2] = rotateMatrix(board[2], 1);
 }
 
+// TODO(me) Implemented funcs ...
+//  https://github.com/felixbd/rubiks_cube/blob/main/Cube.py
+
 void Cube::back() {
-    std::cout << "B" << std::endl;
+    // std::cout << "B" << std::endl;
 }
 
 void Cube::up() {
-    std::cout << "U" << std::endl;
+    // std::cout << "U" << std::endl;
 }
 
 void Cube::down() {
-    std::cout << "D" << std::endl;
+    // std::cout << "D" << std::endl;
 }
 
 void Cube::left() {
-    std::cout << "L" << std::endl;
+    // std::cout << "L" << std::endl;
 }
 
 void Cube::right() {
-    std::cout << "R" << std::endl;
+    // std::cout << "R" << std::endl;
 }
 
 }  // namespace rubikscube

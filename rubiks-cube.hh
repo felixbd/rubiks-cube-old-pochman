@@ -20,6 +20,11 @@ namespace rubikscube {
 std::string printFace(FACE face);
 
 /**
+ * Rotate 3x3 Matrix n-times by 90⁰ Clockwise.
+ * */
+FACE rotateMatrix(FACE a, int num);
+
+/**
  * SOLVED_BOARD contains a list of all faces of a solved cube.
  * https://stackoverflow.com/a/62252088
  * >>Note the extra set of braces. It seems a bit odd but ...<<
@@ -159,7 +164,7 @@ std::ostream& operator<<(std::ostream& pOstream, Cube& c);
  * Check if tow Cube objects are representing the same Cube.
  * @return true if cubes are eq else false
  * */
-bool operator==(Cube& a, Cube& b);
+bool operator==(Cube a, Cube b);
 
 }  // namespace rubikscube
 
