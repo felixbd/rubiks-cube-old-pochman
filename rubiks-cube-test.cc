@@ -6,12 +6,37 @@
 #include <vector>
 #include "./rubiks-cube.hh"
 
-/**
- * Test if the constructor of the Cube class works.
- */
+TEST(MainCubeHelperTest, rubikscubePrintFace) {
+    // TODO(me) ...
+}
+
+TEST(MainCubeHelperTest, rubikscubeRotateMatrix) {
+    FACE a = {
+        {
+            {1, 2, 3},
+            {4, 5, 6},
+            {7, 8, 9}
+        }
+    };
+
+    FACE b = {
+        {
+            {7, 4, 1},
+            {8, 5, 2},
+            {9, 6, 3}
+        }
+    };
+
+    ASSERT_EQ(a, rubikscube::rotateMatrix(a, 4))
+        << "rotating matrix (4x)";
+
+    ASSERT_EQ(rubikscube::rotateMatrix(a, 1), b)
+                                << "rotating matrix (1x)";
+}
+
 TEST(MainCubeTest, checkCubeConstructor) {
     ASSERT_NO_THROW(rubikscube::Cube c1 = rubikscube::Cube();)
-                    << "construction of object from class Cube";
+        << "construction of object from class Cube";
 }
 
 TEST(MainCubeTest, checkEq) {
@@ -28,7 +53,15 @@ TEST(MainCubeTest, checkEq) {
     // EXPECT_FALSE(c4 == c5) << "not eq cubes should not be eq";
 }
 
-TEST(MainCubeTest, checkCubeManipulation) {
+// TODO(me) ...
+TEST(MainCubeManipulationTest, front) {}
+TEST(MainCubeManipulationTest, back) {}
+TEST(MainCubeManipulationTest, top) {}
+TEST(MainCubeManipulationTest, down) {}
+TEST(MainCubeManipulationTest, left) {}
+TEST(MainCubeManipulationTest, right) {}
+
+TEST(MainCubeManipulationTest, checkCubeManipulation) {
     // create cube obj
     rubikscube::Cube c2 = rubikscube::Cube();
     rubikscube::Cube c3 = rubikscube::Cube();
