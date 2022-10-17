@@ -13,12 +13,12 @@
 
 namespace rubikscube {
 
+////////////////////////////////////////////////////////////////////////////////
 std::string printFace(FACE face) {
     std::string rvString;
     for (int x = 0; x < 3; x++) {
         for (int y = 0; y < 3; y++) {
-            // TODO(me)
-            //  std::to_string('0' + face[x][y]) dose not work
+            // TODO(me) std::to_string('0' + face[x][y]) dose not work
             rvString += '0' + face[x][y];
         }
         rvString += '\n';
@@ -26,7 +26,7 @@ std::string printFace(FACE face) {
     return rvString + "\n";
 }
 
-// TODO(me) add test case and check if this func is correct
+////////////////////////////////////////////////////////////////////////////////
 FACE rotateMatrix(FACE a, int num) {
     for (int index = 0; index < num; ++index) {
         // Transposing the matrix
@@ -45,16 +45,15 @@ FACE rotateMatrix(FACE a, int num) {
     return a;
 }
 
-    Cube::Cube() {
+////////////////////////////////////////////////////////////////////////////////
+Cube::Cube() {
     board = SOLVED_BOARD;
 }
 
+////////////////////////////////////////////////////////////////////////////////
 Cube::~Cube() = default;
 
-// std::array<std::array<std::array<int, 3>, 3>, 6> Cube::getBoard() {
-//     return board;
-// }
-
+////////////////////////////////////////////////////////////////////////////////
 FACE Cube::getFace(int a) {
     if (a < 0 || a > 5) {
         throw std::invalid_argument("INDEX OF getFace out of bound");
@@ -62,10 +61,12 @@ FACE Cube::getFace(int a) {
     return board[a];
 }
 
+////////////////////////////////////////////////////////////////////////////////
 int Cube::getBoardElement(int x, int y, int z) {
     return board[x][y][z];
 }
 
+////////////////////////////////////////////////////////////////////////////////
 std::ostream& operator<<(std::ostream& pOstream, Cube& c) {
     return pOstream << printFace(c.getFace(0))
                         << printFace(c.getFace(1))
@@ -76,6 +77,7 @@ std::ostream& operator<<(std::ostream& pOstream, Cube& c) {
                         << std::endl;
 }
 
+////////////////////////////////////////////////////////////////////////////////
 bool operator==(Cube a, Cube b) {
     for (int x = 0; x < 5; ++x) {
         for (int y = 0; y < 4; ++y) {
@@ -90,6 +92,7 @@ bool operator==(Cube a, Cube b) {
     return true;
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void Cube::manipulation(std::vector<std::string> const& instructions) {
     // the number of times each manipulation should be performed
     int num;
@@ -113,16 +116,13 @@ void Cube::manipulation(std::vector<std::string> const& instructions) {
     }
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void Cube::front() {
     // get the current relevant values
-    std::array<int, 3> whiteRow = board[0][2];
-    std::array<int, 3> orangeRow = {
-            board[3][0][0], board[3][1][0], board[3][2][0]
-    };
-    std::array<int, 3> yellowRow = board[5][0];
-    std::array<int, 3> redRow = {
-            board[1][0][2], board[1][1][2], board[1][2][2]
-    };
+    ROW whiteRow = board[0][2];
+    ROW yellowRow = board[5][0];
+    ROW orangeRow = { board[3][0][0], board[3][1][0], board[3][2][0] };
+    ROW redRow = { board[1][0][2], board[1][1][2], board[1][2][2] };
 
     // update the cube by rotating the blue face clockwise by 90°
     board[0][2] = {redRow[2], redRow[1], redRow[0]};
@@ -132,27 +132,84 @@ void Cube::front() {
     board[2] = rotateMatrix(board[2], 1);
 }
 
-// TODO(me) Implemented funcs ...
-//  https://github.com/felixbd/rubiks_cube/blob/main/Cube.py
-
+////////////////////////////////////////////////////////////////////////////////
 void Cube::back() {
-    // std::cout << "B" << std::endl;
+    // get the current relevant values
+    ROW whiteRow =  { board[0][0][2], board[0][0][1], board[0][0][0] };
+    ROW orangeRow = { board[3][0][2], board[3][1][2], board[3][2][2] };
+    ROW yellowRow = { board[5][2][2], board[5][2][1], board[5][2][0] };
+    ROW redRow =    { board[1][0][0], board[1][1][0], board[1][2][0] };
+
+    // update the cube by rotating the blue face clockwise by 90°
+    board[0][0] = orangeRow;
+    for (int i = 0; i < 3; ++i) { board[3][i][2] = yellowRow[i]; }
+    board[5][2] = redRow;
+    for (int i = 0; i < 3; ++i) { board[1][i][0] = whiteRow[i]; }
+    board[4] = rotateMatrix(board[4], 3);
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void Cube::up() {
-    // std::cout << "U" << std::endl;
+    // get the current state of the cube
+    ROW blueRow   = board[2][0];
+    ROW redRow    = board[1][0];
+    ROW greenRow  = board[4][0];
+    ROW orangeRow = board[3][0];
+
+    // update the cube by rotating the white face clockwise by 90°
+    board[2][0] = orangeRow;
+    board[1][0] = blueRow;
+    board[4][0] = { redRow[2], redRow[1], redRow[0] };
+    board[3][0] = { greenRow[2], greenRow[1], greenRow[0] };
+    board[0] = rotateMatrix(board[0], 1);
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void Cube::down() {
-    // std::cout << "D" << std::endl;
+    // get the current state of the cube
+    ROW blueRow   = board[2][2];
+    ROW redRow    = board[1][2];
+    ROW greenRow  = board[4][2];
+    ROW orangeRow = board[3][2];
+
+    // update the cube by rotating the yellow face clockwise by 90°
+    board[2][2] = redRow;
+    board[3][2] = blueRow;
+    board[4][2] = { orangeRow[2], orangeRow[1], orangeRow[0] };
+    board[1][2] = { greenRow[2], greenRow[1], greenRow[0] };
+    board[5] = rotateMatrix(board[5], 1);
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void Cube::left() {
-    // std::cout << "L" << std::endl;
+    // get the current state of the cube
+    ROW whiteRow =  { board[0][0][0], board[0][1][0], board[0][2][0] };
+    ROW blueRow =   { board[2][0][0], board[2][1][0], board[2][2][0] };
+    ROW yellowRow = { board[5][2][0], board[5][1][0], board[5][0][0] };
+    ROW greenRow =  { board[4][2][0], board[4][1][0], board[4][0][0] };
+
+    // update the cube by rotating the red face clockwise by 90°
+    for (int i = 0; i < 3; ++i) { board[0][i][0] = greenRow[i]; }
+    for (int i = 0; i < 3; ++i) { board[2][i][0] = whiteRow[i]; }
+    for (int i = 0; i < 3; ++i) { board[5][i][0] = blueRow[i]; }
+    for (int i = 0; i < 3; ++i) { board[4][i][0] = yellowRow[i]; }
+    board[1] = rotateMatrix(board[1], 1);
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void Cube::right() {
-    // std::cout << "R" << std::endl;
+    // get the current state of the cube
+    ROW whiteRow =  { board[0][2][2], board[0][1][2], board[0][0][2] };
+    ROW greenRow =  { board[4][2][2], board[4][1][2], board[4][0][2] };
+    ROW yellowRow = { board[5][0][2], board[5][1][2], board[5][2][2] };
+    ROW blueRow =   { board[2][0][2], board[2][1][2], board[2][2][2] };
+
+    // update the cube by rotating the orange face clockwise by 90°
+    for (int i = 0; i < 3; ++i) { board[0][i][2] = blueRow[i]; }
+    for (int i = 0; i < 3; ++i) { board[4][i][2] = whiteRow[i]; }
+    for (int i = 0; i < 3; ++i) { board[5][i][2] = greenRow[i]; }
+    for (int i = 0; i < 3; ++i) { board[2][i][2] = yellowRow[i]; }
+    board[3] = rotateMatrix(board[3], 1);
 }
 
 }  // namespace rubikscube

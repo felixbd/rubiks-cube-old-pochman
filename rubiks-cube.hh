@@ -11,8 +11,9 @@
 
 namespace rubikscube {
 
-#define FACE std::array<std::array<int, 3>, 3>
 #define BOARD std::array<std::array<std::array<int, 3>, 3>, 6>
+#define FACE std::array<std::array<int, 3>, 3>
+#define ROW std::array<int, 3>
 
 /**
  * Returns a string with all Values of the given Face of the Cube.
@@ -110,11 +111,6 @@ class Cube {
      * */
     FACE getFace(int a);
 
-     /**
-      * Returns a selected Face of the cube.
-      * */
-      // int
-
     /**
      * Update the current board.
      * TODO(me) how to check if a given board is solvable and valid
@@ -136,22 +132,22 @@ class Cube {
      * Atomic cube manipulations.
      * */
 
-    // rotate the front face of the cube by 90⁰ clockwise
+    // rotate the front face (blue) of the cube by 90⁰ clockwise
     void front();
 
-    // rotate the back face of the cube by 90⁰ counterclockwise
+    // rotate the back face (green) of the cube by 90⁰ counterclockwise
     void back();
 
-    // rotate the up face of the cube by 90⁰ clockwise
+    // rotate the up face (white) of the cube by 90⁰ clockwise
     void up();
 
-    // rotate the down face of the cube by 90⁰ clockwise
+    // rotate the down face (yellow) of the cube by 90⁰ clockwise
     void down();
 
-    // rotate the left face of the cube by 90⁰ clockwise
+    // rotate the left face (red) of the cube by 90⁰ clockwise
     void left();
 
-    // rotate the right face of the cube by 90⁰ clockwise
+    // rotate the right face (orange) of the cube by 90⁰ clockwise
     void right();
 };  // end-class Cube
 
